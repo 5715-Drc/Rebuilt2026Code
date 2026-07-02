@@ -24,7 +24,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldTargets;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Tunable;
+import frc.robot.Tunable.Turret;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.LoggedTunableNumber;
 
 public class TurretNew extends SubsystemBase {
   private static TurretNew TurretNewInstance = null;
@@ -61,33 +63,37 @@ private static final double TURRET_ZERO_OFFSET_ROTATIONS = 0.63;
     m_turret.setPosition(0);
   }
   
-  private void applyTunableConfiguration() {
-        // Current limits
-        tConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Turret.supplyCurrentLimit;
+ private void applyTunableConfiguration() {
+        // Current limits 
+        tConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Turret.LsupplyCurrentLimit.get();
         tConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-        tConfiguration.CurrentLimits.StatorCurrentLimit = Tunable.Turret.statorCurrentLimit;
+        tConfiguration.CurrentLimits.StatorCurrentLimit = Tunable.Turret.LstatorCurrentLimit.get();
         tConfiguration.CurrentLimits.StatorCurrentLimitEnable = true;
         
-        tConfiguration.MotorOutput.PeakForwardDutyCycle = Tunable.Turret.PeakForwardDutyCycle;
-        tConfiguration.MotorOutput.PeakReverseDutyCycle = Tunable.Turret.PeakReverseDutyCycle;
+        // Peak Duty Cycle
+        tConfiguration.MotorOutput.PeakForwardDutyCycle = Tunable.Turret.LpeakForwardDutyCycle.get();
+        tConfiguration.MotorOutput.PeakReverseDutyCycle = Tunable.Turret.LpeakReverseDutyCycle.get();
 
-        tConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Tunable.Turret.maxPosition;
+        // Soft Limits
+        tConfiguration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Tunable.Turret.LmaxPosition.get();
         tConfiguration.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        tConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Tunable.Turret.minPosition;
+        tConfiguration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Tunable.Turret.LminPosition.get();
         tConfiguration.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        // PID Slot0
-        tConfiguration.Slot0.kP = Tunable.Turret.kP;
-        tConfiguration.Slot0.kS = Tunable.Turret.kS;
-        tConfiguration.Slot0.kV = Tunable.Turret.kV;
-        tConfiguration.Slot0.kI = Tunable.Turret.kI;
 
+        // PID Slot0
+        tConfiguration.Slot0.kP = Tunable.Turret.LkP.get();
+        tConfiguration.Slot0.kS = Tunable.Turret.LkS.get();
+        tConfiguration.Slot0.kV = Tunable.Turret.LkV.get();
+        tConfiguration.Slot0.kI = Tunable.Turret.LkI.get();
+        tConfiguration.Slot0.kD = Tunable.Turret.LkD.get(); 
         tConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         tConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
         // Motion Magic
         motionMagicConfiguration = tConfiguration.MotionMagic;
-        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Turret.cruiseVelocity;
-        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Turret.acceleration;
-        motionMagicConfiguration.MotionMagicJerk = Tunable.Turret.jerk;
+        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Turret.LcruiseVelocity.get();
+        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Turret.Lacceleration.get();
+        motionMagicConfiguration.MotionMagicJerk = Tunable.Turret.Ljerk.get();
         
         // Apply configuration to motor
         m_turret.getConfigurator().apply(tConfiguration);
@@ -350,5 +356,23 @@ public void aimTurret1(Drive drive) {
   @Override
   public void periodic() {
     Logger.recordOutput("Turret/PositionDeg", turretDegreesFromMotorRotations());
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> applyTunableConfiguration(),
+        Tunable.Turret.LkP,
+        Tunable.Turret.LkI,
+        Tunable.Turret.LkD,
+        Tunable.Turret.LkS,
+        Tunable.Turret.LkV,
+        Tunable.Turret.LcruiseVelocity,
+        Tunable.Turret.Lacceleration,
+        Tunable.Turret.Ljerk,
+        Tunable.Turret.LsupplyCurrentLimit,
+        Tunable.Turret.LstatorCurrentLimit,
+        Tunable.Turret.LmaxPosition,
+        Tunable.Turret.LminPosition,
+        Tunable.Turret.LpeakForwardDutyCycle,
+        Tunable.Turret.LpeakReverseDutyCycle
+    );
   }
 }

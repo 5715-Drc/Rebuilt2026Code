@@ -54,14 +54,14 @@ private boolean isManualMode = false;
     HoodMotor.clearStickyFaults();
     HoodMotor.setPosition(0);
   }
-  private void applyTunableConfiguration() {
+ private void applyTunableConfiguration() {
        
         // PID Slot0
-        HoodConfiguration.Slot0.kP = Tunable.Hood.kP;
-        HoodConfiguration.Slot0.kS = Tunable.Hood.kS;
-        HoodConfiguration.Slot0.kV = Tunable.Hood.kV;
-        HoodConfiguration.Slot0.kI = Tunable.Hood.kI;
-
+        HoodConfiguration.Slot0.kP = Tunable.Hood.LkP.get();
+        HoodConfiguration.Slot0.kS = Tunable.Hood.LkS.get();
+        HoodConfiguration.Slot0.kV = Tunable.Hood.LkV.get();
+        HoodConfiguration.Slot0.kI = Tunable.Hood.LkI.get();
+        HoodConfiguration.Slot0.kD = Tunable.Hood.LkD.get(); 
     HoodConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     HoodConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         
@@ -73,20 +73,18 @@ private boolean isManualMode = false;
     HoodConfiguration.CurrentLimits.SupplyCurrentLimit = 30;
     HoodConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    
     HoodConfiguration.MotorOutput.PeakForwardDutyCycle = 0.15;
     HoodConfiguration.MotorOutput.PeakReverseDutyCycle = -0.15;
 
         // Motion Magic
         motionMagicConfiguration = HoodConfiguration.MotionMagic;
-        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Hood.cruiseVelocity;
-        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Hood.acceleration;
-        motionMagicConfiguration.MotionMagicJerk = Tunable.Hood.jerk;
+        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Hood.LcruiseVelocity.get();
+        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Hood.Lacceleration.get();
+        motionMagicConfiguration.MotionMagicJerk = Tunable.Hood.Ljerk.get();
         
         // Apply configuration to motor
         HoodMotor.getConfigurator().apply(HoodConfiguration);
     }
-
   public static Hood getHoodInstance() {
     if (HoodInstance == null) HoodInstance = new Hood();
     return HoodInstance;
@@ -161,11 +159,18 @@ private boolean isManualMode = false;
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Hood Position", HoodMotor.getPosition().getValueAsDouble());
-
-
-
-
-
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> applyTunableConfiguration(),
+        Tunable.Hood.LkP,
+        Tunable.Hood.LkI,
+        Tunable.Hood.LkD,
+        Tunable.Hood.LkS,
+        Tunable.Hood.LkV,
+        Tunable.Hood.LcruiseVelocity,
+        Tunable.Hood.Lacceleration,
+        Tunable.Hood.Ljerk
+    );
 
   }
 }

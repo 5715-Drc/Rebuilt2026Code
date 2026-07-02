@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Tunable;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Feeder extends SubsystemBase { 
   private static Feeder feederInstance = null;
@@ -35,35 +36,31 @@ public class Feeder extends SubsystemBase {
 
     dutyCycleOut = new DutyCycleOut(0);
   }
-  private void applyTunableConfiguration() {
-               
-
-        feederConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        feederConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-        feederConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Feeder.supplyCurrentLimit;
+ private void applyTunableConfiguration() {
+        // Current limits 
+        feederConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Feeder.LsupplyCurrentLimit.get();
         feederConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;        
         
-        // PID Slot0
-        // feederConfiguration.Slot0.kP = Tunable.Feeder.kP;
-        // feederConfiguration.Slot0.kS = Tunable.Feeder.kS;
-        // feederConfiguration.Slot0.kV = Tunable.Feeder.kV;
-        // feederConfiguration.Slot0.kI = Tunable.Feeder.kI;
-        // feederConfiguration.Slot0.kD = Tunable.Feeder.kD;
-        // feederConfiguration.Slot0.kA = Tunable.Feeder.kA;
+        // PID Slot0 
+        feederConfiguration.Slot0.kP = Tunable.Feeder.LkP.get();
+        feederConfiguration.Slot0.kS = Tunable.Feeder.LkS.get();
+        feederConfiguration.Slot0.kV = Tunable.Feeder.LkV.get();
+        feederConfiguration.Slot0.kI = Tunable.Feeder.LkI.get();
+        feederConfiguration.Slot0.kD = Tunable.Feeder.LkD.get();
+        feederConfiguration.Slot0.kA = Tunable.Feeder.LkA.get();
 
         // Motor configuration
         feederConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         feederConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        // Motion Magic
-        // motionMagicConfiguration = feederConfiguration.MotionMagic;
-        // motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Feeder.motionMagicCruiseVelocity;
-        // motionMagicConfiguration.MotionMagicAcceleration = Tunable.Feeder.motionMagicAcceleration;
-        // motionMagicConfiguration.MotionMagicJerk = Tunable.Feeder.motionMagicJerk;
+        // Motion Magic 
+        motionMagicConfiguration = feederConfiguration.MotionMagic;
+        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Feeder.LmotionMagicCruiseVelocity.get();
+        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Feeder.LmotionMagicAcceleration.get();
+        motionMagicConfiguration.MotionMagicJerk = Tunable.Feeder.LmotionMagicJerk.get();
         
-        // Apply configuration to motor
-        // m_feeder.getConfigurator().apply(feederConfiguration);
+        // Apply configuration to motor 
+        m_feeder.getConfigurator().apply(feederConfiguration);
     }
     public static Feeder getfeederInstance() {
     if (feederInstance == null) feederInstance = new Feeder();
@@ -98,6 +95,21 @@ public class Feeder extends SubsystemBase {
 
     SmartDashboard.putNumber("Feeder DutyCycle", m_feeder.getDutyCycle().getValueAsDouble());
     SmartDashboard.putNumber("Feeder Velocity", m_feeder.getVelocity().getValueAsDouble());
-    
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> applyTunableConfiguration(),
+        Tunable.Feeder.LkP,
+        Tunable.Feeder.LkI,
+        Tunable.Feeder.LkD,
+        Tunable.Feeder.LkS,
+        Tunable.Feeder.LkV,
+        Tunable.Feeder.LkA,
+        Tunable.Feeder.LmotionMagicCruiseVelocity,
+        Tunable.Feeder.LmotionMagicAcceleration,
+        Tunable.Feeder.LmotionMagicJerk,
+        Tunable.Feeder.LsupplyCurrentLimit,
+        Tunable.Feeder.LspeedMultiplier,
+        Tunable.Feeder.LfeederVelocity
+    );
   }
 }

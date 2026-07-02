@@ -105,7 +105,7 @@ static List<ShooterPoint> shooterMap = List.of(
     new ShooterPoint(4.872628439591005, 3.05, 76.00),
     new ShooterPoint(4.935631977933902, 3.1, 77.0),
     new ShooterPoint(5.045867181015592, 3.1, 77.5),
-    new ShooterPoint(5.1347163686685615, 3.15, 78.00)
+    new ShooterPoint(5.1347163686685615, 3.15, 81.00)
 );
       public static ShooterPoint interpolate(double distance) {
         for (int i = 0; i < shooterMap.size() - 1; i++) {

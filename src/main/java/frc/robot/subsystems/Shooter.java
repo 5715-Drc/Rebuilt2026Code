@@ -68,36 +68,34 @@ public class Shooter extends SubsystemBase {
     dutyCycleOutForMove = new DutyCycleOut(0);
   }
  private void applyTunableConfiguration() {
-        // Current limits
-        shooterConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Shooter.supplyCurrentLimit;
-        shooterConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
-        shooterConfiguration.CurrentLimits.SupplyCurrentLowerLimit = Tunable.Shooter.supplyCurrentLowerLimit;
-        shooterConfiguration.CurrentLimits.SupplyCurrentLowerTime = Tunable.Shooter.supplyCurrentLowerTime;
-        
-        // PID Slot0
-        shooterConfiguration.Slot0.kP = Tunable.Shooter.kP;
-        shooterConfiguration.Slot0.kS = Tunable.Shooter.kS;
-        shooterConfiguration.Slot0.kV = Tunable.Shooter.kV;
-        shooterConfiguration.Slot0.kI = Tunable.Shooter.kI;
-        shooterConfiguration.Slot0.kD = Tunable.Shooter.kD;
-        shooterConfiguration.Slot0.kA = Tunable.Shooter.kA;
+    // Current limits
+    shooterConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Shooter.LsupplyCurrentLimit.get(); 
+    shooterConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    shooterConfiguration.CurrentLimits.SupplyCurrentLowerLimit = Tunable.Shooter.LsupplyCurrentLowerLimit.get();
+    shooterConfiguration.CurrentLimits.SupplyCurrentLowerTime = Tunable.Shooter.LsupplyCurrentLowerTime.get();
+    
+    // PID Slot0
+    shooterConfiguration.Slot0.kP = Tunable.Shooter.LkP.get();
+    shooterConfiguration.Slot0.kI = Tunable.Shooter.LkI.get();
+    shooterConfiguration.Slot0.kD = Tunable.Shooter.LkD.get();
+    shooterConfiguration.Slot0.kS = Tunable.Shooter.LkS.get();
+    shooterConfiguration.Slot0.kV = Tunable.Shooter.LkV.get();
+    shooterConfiguration.Slot0.kA = Tunable.Shooter.LkA.get();
 
-        // Motor configuration
-        shooterConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-        shooterConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    // Motor configuration
+    shooterConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    shooterConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        // Motion Magic
-        motionMagicConfiguration = shooterConfiguration.MotionMagic;
-        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Shooter.motionMagicCruiseVelocity;
-        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Shooter.motionMagicAcceleration;
-        motionMagicConfiguration.MotionMagicJerk = Tunable.Shooter.motionMagicJerk;
-
-        
-        
-        // Apply configuration to motor
-        shooterMotor.getConfigurator().apply(shooterConfiguration);
-        shooterMotor1.getConfigurator().apply(shooterConfiguration);
-    }
+    // Motion Magic
+    motionMagicConfiguration = shooterConfiguration.MotionMagic;
+    motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Shooter.LmotionMagicCruiseVelocity.get();
+    motionMagicConfiguration.MotionMagicAcceleration = Tunable.Shooter.LmotionMagicAcceleration.get();
+    motionMagicConfiguration.MotionMagicJerk = Tunable.Shooter.LmotionMagicJerk.get();
+    
+    // Apply configuration to motors
+    shooterMotor.getConfigurator().apply(shooterConfiguration);
+    shooterMotor1.getConfigurator().apply(shooterConfiguration);
+}
   //This method calculates the position of the hood relative to the field 
   //It uses the position of the hood relative to the robot relative to the field
   public Pose2d 
@@ -264,22 +262,27 @@ public boolean readyToFeed(double targetRPS) {
 }
 
   @Override
-  public void periodic() {
-   SmartDashboard.putNumber("Shooterleader/CurrentSpeed(Velocity)", getSpeed());
-   SmartDashboard.putNumber("Shooterleader/CurrentSpeed(DutyCycle)", getSpeedDutyCycle());
+public void periodic() {
+    SmartDashboard.putNumber("Shooterleader/CurrentSpeed(Velocity)", getSpeed());
+    SmartDashboard.putNumber("Shooterleader/CurrentSpeed(DutyCycle)", getSpeedDutyCycle());
+
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> applyTunableConfiguration(),
+        Tunable.Shooter.LkP, 
+        Tunable.Shooter.LkI, 
+        Tunable.Shooter.LkD, 
+        Tunable.Shooter.LkS, 
+        Tunable.Shooter.LkV,
+        Tunable.Shooter.LkA, 
+        Tunable.Shooter.LmotionMagicCruiseVelocity,
+        Tunable.Shooter.LmotionMagicAcceleration,
+        Tunable.Shooter.LmotionMagicJerk,
+        Tunable.Shooter.LsupplyCurrentLowerTime,
+        Tunable.Shooter.LsupplyCurrentLowerLimit,
+        Tunable.Shooter.LsupplyCurrentLimit
 
 
-
-        LoggedTunableNumber.ifChanged(
-            hashCode(),
-            () -> applyTunableConfiguration(),
-            Tunable.Shooter.LkP, 
-            Tunable.Shooter.LkI, 
-            Tunable.Shooter.LkS, 
-            Tunable.Shooter.LkV,
-            Tunable.Shooter.LmotionMagicCruiseVelocity,
-            Tunable.Shooter.LmotionMagicAcceleration,
-            Tunable.Shooter.LmotionMagicJerk);
-  
-  }
+    );
+}
 }

@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Tunable;
+import frc.robot.util.LoggedTunableNumber;
 
 public class Indexer extends SubsystemBase {
     private static Indexer IndexerInstance = null;
@@ -35,34 +36,31 @@ public class Indexer extends SubsystemBase {
   }
 
    private void applyTunableConfiguration() {
-               
-
         indexerConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         indexerConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        indexerConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Indexer.supplyCurrentLimit;
+        // Current Limits
+        indexerConfiguration.CurrentLimits.SupplyCurrentLimit = Tunable.Indexer.LsupplyCurrentLimit.get();
         indexerConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;        
         
-        // PID Slot0
-        // indexerConfiguration.Slot0.kP = Tunable.Indexer.kP;
-        // indexerConfiguration.Slot0.kI = Tunable.Indexer.kI;
-        // indexerConfiguration.Slot0.kD = Tunable.Indexer.kD;
-        // indexerConfiguration.Slot0.kS = Tunable.Indexer.kS;
-        // indexerConfiguration.Slot0.kV = Tunable.Indexer.kV;
-        // indexerConfiguration.Slot0.kA = Tunable.Indexer.kA;
+        // PID Slot0 
+        indexerConfiguration.Slot0.kP = Tunable.Indexer.LkP.get();
+        indexerConfiguration.Slot0.kI = Tunable.Indexer.LkI.get();
+        indexerConfiguration.Slot0.kD = Tunable.Indexer.LkD.get();
+        indexerConfiguration.Slot0.kS = Tunable.Indexer.LkS.get();
+        indexerConfiguration.Slot0.kV = Tunable.Indexer.LkV.get();
+        indexerConfiguration.Slot0.kA = Tunable.Indexer.LkA.get();
 
         // Motion Magic configuration
-      // motionMagicConfiguration = indexerConfiguration.MotionMagic;
+        motionMagicConfiguration = indexerConfiguration.MotionMagic;
+        motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Indexer.LmotionMagicCruiseVelocity.get();
+        motionMagicConfiguration.MotionMagicAcceleration = Tunable.Indexer.LmotionMagicAcceleration.get();
+        motionMagicConfiguration.MotionMagicJerk = Tunable.Indexer.LmotionMagicJerk.get();
 
-      //   motionMagicConfiguration.MotionMagicCruiseVelocity = Tunable.Indexer.motionMagicCruiseVelocity;
-      //   motionMagicConfiguration.MotionMagicAcceleration = Tunable.Indexer.motionMagicAcceleration;
-      //   motionMagicConfiguration.MotionMagicJerk = Tunable.Indexer.motionMagicJerk;
+        // Apply configuration to motor 
+        m_indexer.getConfigurator().apply(indexerConfiguration);
 
-        // Apply configuration to motor
-        // m_indexer.getConfigurator().apply(indexerConfiguration);
-    }
-
-
+  }
   public static Indexer getIndexerInstance() {
     if (IndexerInstance == null) IndexerInstance = new Indexer();
     return IndexerInstance;
@@ -95,6 +93,20 @@ public void indexerAtVelocity(double velocityRps) {
 
     SmartDashboard.putNumber("Indexer DutyCycle", m_indexer.getDutyCycle().getValueAsDouble());
     SmartDashboard.putNumber("Indexer Velocity", m_indexer.getVelocity().getValueAsDouble());
-           
+           LoggedTunableNumber.ifChanged(
+            hashCode(),
+            () -> applyTunableConfiguration(),
+            Tunable.Indexer.LkP,
+            Tunable.Indexer.LkI,
+            Tunable.Indexer.LkD,
+            Tunable.Indexer.LkS,
+            Tunable.Indexer.LkV,
+            Tunable.Indexer.LkA,
+            Tunable.Indexer.LmotionMagicCruiseVelocity,
+            Tunable.Indexer.LmotionMagicAcceleration,
+            Tunable.Indexer.LmotionMagicJerk,
+            Tunable.Indexer.LsupplyCurrentLimit,
+            Tunable.Indexer.LindexerVelocity
+        );
   }
 }

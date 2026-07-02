@@ -62,40 +62,38 @@ public class Intake extends SubsystemBase {
     private void applyTunableConfiguration() {
     //Extender
         // Current limits
-        config.CurrentLimits.SupplyCurrentLimit = Tunable.Intake.supplyCurrentLimit;
+        config.CurrentLimits.SupplyCurrentLimit = Tunable.Intake.LsupplyCurrentLimit.get();
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = Tunable.Intake.statorCurrentLimit;
+        config.CurrentLimits.StatorCurrentLimit = Tunable.Intake.LstatorCurrentLimit.get();
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         // PID Slot0
-        config.Slot0.kP = Tunable.Intake.kP;
-        config.Slot0.kS = Tunable.Intake.kS;
-        config.Slot0.kV = Tunable.Intake.kV;
-        config.Slot0.kI = Tunable.Intake.kI;
+        config.Slot0.kP = Tunable.Intake.LkP.get();
+        config.Slot0.kS = Tunable.Intake.LkS.get();
+        config.Slot0.kV = Tunable.Intake.LkV.get();
+        config.Slot0.kI = Tunable.Intake.LkI.get();
 
-        
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Tunable.Intake.minPosition;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Tunable.Intake.maxPosition;
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Tunable.Intake.LminPosition.get();
+        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Tunable.Intake.LmaxPosition.get();
+        config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+        config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         // Motion Magic
         magicConfigs = config.MotionMagic;
-        magicConfigs.MotionMagicCruiseVelocity = Tunable.Intake.cruiseVelocity;
-        magicConfigs.MotionMagicAcceleration = Tunable.Intake.acceleration;
-        magicConfigs.MotionMagicJerk = Tunable.Intake.jerk;
+        magicConfigs.MotionMagicCruiseVelocity = Tunable.Intake.LcruiseVelocity.get();
+        magicConfigs.MotionMagicAcceleration = Tunable.Intake.Lacceleration.get();
+        magicConfigs.MotionMagicJerk = Tunable.Intake.Ljerk.get();
 
     //Move
-
-    // PID Slot0
-        MoveConfig.Slot0.kP = Tunable.Intake.MkP;
-        MoveConfig.Slot0.kS = Tunable.Intake.MkS;
-        MoveConfig.Slot0.kV = Tunable.Intake.MkV;
-        MoveConfig.Slot0.kI = Tunable.Intake.MkI;
-        MoveConfig.Slot0.kD = Tunable.Intake.MkD;
-        MoveConfig.Slot0.kA = Tunable.Intake.MKA;
+        // PID Slot0
+        MoveConfig.Slot0.kP = Tunable.Intake.LMkP.get();
+        MoveConfig.Slot0.kS = Tunable.Intake.LMkS.get();
+        MoveConfig.Slot0.kV = Tunable.Intake.LMkV.get();
+        MoveConfig.Slot0.kI = Tunable.Intake.LMkI.get();
+        MoveConfig.Slot0.kD = Tunable.Intake.LMkD.get();
+        MoveConfig.Slot0.kA = Tunable.Intake.LMkA.get();
 
         // Motor configuration
         MoveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -103,13 +101,12 @@ public class Intake extends SubsystemBase {
 
         // Motion Magic
         motionMagicConfigurationMove = MoveConfig.MotionMagic;
-        motionMagicConfigurationMove.MotionMagicCruiseVelocity = Tunable.Intake.McruiseVelocity;
-        motionMagicConfigurationMove.MotionMagicAcceleration = Tunable.Intake.McruiseVelocity;
-        motionMagicConfigurationMove.MotionMagicJerk = Tunable.Intake.Mjerk;
+        motionMagicConfigurationMove.MotionMagicCruiseVelocity = Tunable.Intake.LMcruiseVelocity.get();
+        motionMagicConfigurationMove.MotionMagicAcceleration = Tunable.Intake.LMacceleration.get();
+        motionMagicConfigurationMove.MotionMagicJerk = Tunable.Intake.LMjerk.get();
         
-        // Apply configuration to motor
-        // m_move.getConfigurator().apply(MoveConfig);
-        // Apply configuration to motor
+        // Apply configuration to motors
+        m_move.getConfigurator().apply(MoveConfig);
         m_extender.getConfigurator().apply(config);
     }
 
@@ -146,5 +143,34 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake/Position", m_extender.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/IntakeSpeed", m_move.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Intake/IntakeTemp",m_move.getDeviceTemp().getValueAsDouble());
+        
+        LoggedTunableNumber.ifChanged(
+            hashCode(),
+            () -> applyTunableConfiguration(),
+            // Extender Tunables
+            Tunable.Intake.LkP,
+            Tunable.Intake.LkI,
+            Tunable.Intake.LkS,
+            Tunable.Intake.LkV,
+            Tunable.Intake.LmaxPosition,
+            Tunable.Intake.LminPosition,
+            Tunable.Intake.LcruiseVelocity,
+            Tunable.Intake.Lacceleration,
+            Tunable.Intake.Ljerk,
+            // Move Tunables
+            Tunable.Intake.LMkP,
+            Tunable.Intake.LMkI,
+            Tunable.Intake.LMkD,
+            Tunable.Intake.LMkS,
+            Tunable.Intake.LMkV,
+            Tunable.Intake.LMkA,
+            Tunable.Intake.LMcruiseVelocity,
+            Tunable.Intake.LMacceleration,
+            Tunable.Intake.LMjerk,
+            // Limits
+            Tunable.Intake.LsupplyCurrentLimit,
+            Tunable.Intake.LstatorCurrentLimit
+        );
+    
     }
 }
