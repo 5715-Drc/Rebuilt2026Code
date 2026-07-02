@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.231184022824536,
+        "y": 5.244764621968616
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.645221112696147,
+        "y": 7.767803138373752
+      },
+      "isLocked": false,
+      "linkedName": "RightRed-E7"
+    },
+    {
+      "anchor": {
+        "x": 13.083181169757488,
+        "y": 7.263195435092724
+      },
+      "prevControl": {
+        "x": 12.203352353780312,
+        "y": 7.677232524964337
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4797441364605531,
+      "rotationDegrees": 179.14700452673102
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 540.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -163.4429286243634
+  },
+  "reversed": false,
+  "folder": "RigthRedAuto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 70.02740754856482
+  },
+  "useDefaultConstraints": true
+}
