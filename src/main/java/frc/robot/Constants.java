@@ -61,8 +61,7 @@ public final class Constants {
   public static class ShooterConstants {
   
 public static final double ksystemlatancy = 0.04;
-public static final double kvelocityscalar = 1.7
-;
+public static final double kvelocityscalar = 2.4;
 
 
       public record ShooterPoint(

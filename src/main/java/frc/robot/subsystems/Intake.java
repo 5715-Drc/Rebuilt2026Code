@@ -76,7 +76,7 @@ public class Intake extends SubsystemBase {
         
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Tunable.Intake.minPosition;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Tunable.Intake.maxPosition;
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;

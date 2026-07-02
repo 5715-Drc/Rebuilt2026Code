@@ -41,6 +41,7 @@ public class AutoScoreFuel extends Command {
 
   @Override 
   public void end(boolean interrupted) {
+    shooter.shootAtVelocity(0);
   }
 
   @Override 

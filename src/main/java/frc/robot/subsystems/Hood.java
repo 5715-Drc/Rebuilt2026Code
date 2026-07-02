@@ -26,12 +26,11 @@ public class Hood extends SubsystemBase {
   final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
   double positionToRotate;
 
-  private final double MAX_TICKS = 3.0;
+  private final double MAX_TICKS = 2.7;
   private final double MIN_TICKS = 0.0;
 
   private double manualTargetPosition = 0.0;
 private boolean isManualMode = false;
-
 
   private final double oneDergreeInTicks = 0.1339863933343103;
 
@@ -75,8 +74,8 @@ private boolean isManualMode = false;
     HoodConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     
-    HoodConfiguration.MotorOutput.PeakForwardDutyCycle = 0.5;
-    HoodConfiguration.MotorOutput.PeakReverseDutyCycle = -0.5;
+    HoodConfiguration.MotorOutput.PeakForwardDutyCycle = 0.15;
+    HoodConfiguration.MotorOutput.PeakReverseDutyCycle = -0.15;
 
         // Motion Magic
         motionMagicConfiguration = HoodConfiguration.MotionMagic;
@@ -96,15 +95,13 @@ private boolean isManualMode = false;
   public void lockCurrentPosition() {
     // Stop the raw motor speed output
     this.HoodMove(0); 
-    
+
     // Grab where the encoder is sitting exactly right now (e.g., 3.6)
     this.manualTargetPosition = getHoodPosition(); 
-    
+
     // Re-engage position holding mode, locked onto the new position
     this.isManualMode = true; 
-}
-
-  
+  }
 
 
 

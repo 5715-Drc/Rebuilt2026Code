@@ -20,8 +20,8 @@ public class IntakeIn extends SequentialCommandGroup {
         pose = SmartDashboard.getNumber("intake desired position", -9.5);//-9.63
 
         addCommands(new InstantCommand(() -> intake.IntakePose(-9.45)));
-        // addCommands(new InstantCommand(() -> intake.intakeAtVelocity(-50)));
-        addCommands(new InstantCommand(() -> intake.intakeMove(-0.70)));
+        // addCommands(new InstantCommand(() -> intake.intakeAtVelocity(-50)));+
+        addCommands(new InstantCommand(() -> intake.intakeMove(-0.8)));
         // addCommands(new InstantCommand(() -> intake.intakeMove(-1)));
         addCommands(new InstantCommand(() -> RobotContainer.blink.setHeartBeatWhite()));
     }

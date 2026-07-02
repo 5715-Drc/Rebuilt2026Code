@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IsHubActive;
@@ -228,7 +227,7 @@ SmartDashboard.putNumber("Turret/SpeedVY", 0);
     NamedCommands.registerCommand("AutoLookHood", new LockHoodAtHub(drive,hood,shooter));
     NamedCommands.registerCommand("AutoLookTurret", new turretTrack(drive,turretnew));
     NamedCommands.registerCommand("AutoTrackHub", new AutoLockTurretHood(drive,turretnew, hood, shooter));
-    NamedCommands.registerCommand("AutoScoreFuel", new AutoStopScore(drive,shooter, hood));
+    // NamedCommands.registerCommand("AutoScoreFuel", new AutoStopScore(drive,shooter, hood));
     NamedCommands.registerCommand("ScoreTrackedEnable", new InstantCommand(() -> shooter.shootAtVelocity(shooter.getTargetVelocity(drive,hood))));
     NamedCommands.registerCommand("AutoIndexerDisable", new InstantCommand(() -> indexer.setStopIndexerState()));
     NamedCommands.registerCommand("AutoFeederDisable",new InstantCommand(()-> feeder.setStopFeederState()));
@@ -237,7 +236,10 @@ SmartDashboard.putNumber("Turret/SpeedVY", 0);
     NamedCommands.registerCommand("ScoreTrackedDisable", new InstantCommand(() -> shooter.setStopState()));
     NamedCommands.registerCommand("AutoOffset", new AutoOffset(drive, turretnew, shooter, hood));
     NamedCommands.registerCommand("setPose", Commands.runOnce(() -> drive.setPose(new Pose2d(12.136, 7.620, Rotation2d.fromDegrees(0))),drive));
-    NamedCommands.registerCommand("AutoStopscore" , new AutoStopScoreFuel(drive,shooter,hood));  
+   
+    NamedCommands.registerCommand("AutoStopScore" , new AutoStopScoreFuel(drive,shooter,hood));  
+    NamedCommands.registerCommand("AutoScoreFuel" , new AutoScoreFuel(drive,shooter,hood));  
+
     NamedCommands.registerCommand("Autoinatakeoc", new AutoIntakeOC());
     NamedCommands.registerCommand("IntakeStopAll", new IntakeStopAll(intake));
     NamedCommands.registerCommand("Feed", new Feed());
@@ -251,6 +253,7 @@ SmartDashboard.putNumber("Turret/SpeedVY", 0);
     autoChooserAuto.addOption("BlueRight-2Cycles+Outpost", new PathPlannerAuto("BR"));
     autoChooserAuto.addOption("P1-RRA-AUTO", new PathPlannerAuto("P1-RRA-AUTO"));
     autoChooserAuto.addOption("F-RRA-AUTO", new PathPlannerAuto("F-RRA-AUTO"));
+    autoChooserAuto.addOption("PitTest", new PathPlannerAuto("PitTest"));
     autoChooserAuto.addOption("M4", new PathPlannerAuto("M4"));
     autoChooserAuto.addOption("M2", new PathPlannerAuto("M2"));
     autoChooserAuto.addOption("TestCommand", new PathPlannerAuto("Test2MWC"));
@@ -295,16 +298,7 @@ SmartDashboard.putNumber("Turret/SpeedVY", 0);
   //   new LockHoodAtHub(drive, hood, shooter)
   // );
 //shooter.setDefaultCommand(new ScoreFuel(drive, shooter, hood));
-// hood.setDefaultCommand(new LockHoodAtHub(drive, hood, shooter));
-// 1. Create a trigger that detects when you are holding your manual hood buttons
-// 1. Create the tracking trigger for your manual buttons
-Trigger manualHoodActive = controller.pov(0).or(controller.pov(180));
-
-// 2. USE NEGATE() HERE: 
-// This runs LockHoodAtHub ONLY when manualHoodActive is FALSE.
-manualHoodActive.negate().whileTrue(new LockHoodAtHub(drive, hood, shooter));
-
-
+hood.setDefaultCommand(new LockHoodAtHub(drive, hood, shooter));
 turretnew.setDefaultCommand(new turretTrack(drive, turretnew));
 
     // shooter.setDefaultCommand(new ShooterDefaultCommand(shooter));
@@ -348,7 +342,28 @@ turretnew.setDefaultCommand(new turretTrack(drive, turretnew));
       controller.leftBumper().toggleOnTrue(new ScoreFuel(drive, shooter, hood)).toggleOnFalse(new ScoreStop());
    
 
- 
+    //intake control
+     controller.pov(90).onTrue(new InstantCommand(() -> intake.intakeRotation(0.4))).onFalse(new InstantCommand(() -> intake.intakeRotation(0)));
+     controller.pov(270).onTrue(new InstantCommand(() -> intake.intakeRotation(-0.6))).onFalse(new InstantCommand(() -> intake.intakeRotation(0)));
+// Hood control (Using whileTrue + StartEndCommand)
+
+// Hood Manual Move Up (POV 0)
+controller.pov(0).whileTrue(
+    new StartEndCommand(
+        () -> hood.HoodMove(0.4), 
+        () -> hood.lockCurrentPosition(), // Tells hood: "Hold exactly where I left you"
+        hood
+    )
+);
+
+// Hood Manual Move Down (POV 180)
+controller.pov(180).whileTrue(
+    new StartEndCommand(
+        () -> hood.HoodMove(-0.4), 
+        () -> hood.lockCurrentPosition(), 
+        hood
+    )
+);
 
     //Indexer
     controller.b()
@@ -358,25 +373,6 @@ turretnew.setDefaultCommand(new turretTrack(drive, turretnew));
    controller.x().onTrue(new IntakeReverse()).onFalse(new IntakeOffset());
 
     controller.back().onTrue(new InstantCommand(() -> intake.ResetIntakePose()));
-
-    // Hood Manual Move Up (POV 0)
-controller.pov(0).whileTrue(
-    new StartEndCommand(
-        () -> hood.HoodMove(0.4), 
-        () -> hood.goToPositionMotionMagic(hood.getHoodPosition()), // Freezes the motor on 3.6 when you let go
-        hood                               
-    )
-);
-
-// Hood Manual Move Down (POV 180)
-controller.pov(180).whileTrue(
-    new StartEndCommand(
-        () -> hood.HoodMove(-0.4), 
-        () -> hood.goToPositionMotionMagic(hood.getHoodPosition()), // Freezes the motor on 3.6 when you let go
-        hood                               
-    )
-);
-
    
    //controller.pov(90).onTrue(new InstantCommand(() -> intake.intakeMove(0.4))).onFalse(new InstantCommand(() -> intake.intakeMove(0)));
 

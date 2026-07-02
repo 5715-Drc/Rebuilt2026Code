@@ -65,6 +65,7 @@ public class ScoreFuel extends Command {
     //     if(shooter.getSpeed() < (Dvs+ 5)) {
     //   CommandScheduler.getInstance().schedule(new Feed());
     //}
+
     if(shooter.getSpeed() < (-target.velocity() + 5)) {
       CommandScheduler.getInstance().schedule(new Feed());
     }

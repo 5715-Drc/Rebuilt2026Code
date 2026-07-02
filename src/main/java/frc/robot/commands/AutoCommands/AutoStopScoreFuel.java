@@ -14,8 +14,7 @@ public class AutoStopScoreFuel extends Command {
 
   private final Drive drive;
   private final Shooter shooter;
-  private final Hood hood;
-  
+ private final Hood hood;  
 
   public AutoStopScoreFuel(Drive drive, Shooter shooter, Hood hood) {    
     this.drive = drive;

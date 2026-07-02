@@ -71,8 +71,8 @@ public class Tunable {
         public static final double maxPosition = -9.45;
         public static final double minPosition = 0;
     // Motion Magic
-    public static final double cruiseVelocity = 40;
-    public static final double acceleration = 60;
+    public static final double cruiseVelocity = 30;
+    public static final double acceleration = 50;
     public static final double jerk = 4000;
 
 
@@ -105,8 +105,8 @@ public class Tunable {
 
         public static final double Max = 0.0;
         // Motion Magic
-        public static final double cruiseVelocity = 100;
-        public static final double acceleration = 100;
+        public static final double cruiseVelocity = 40;
+        public static final double acceleration = 60;
         public static final double jerk = 1000;
     }
 
@@ -131,8 +131,8 @@ public class Tunable {
         public static final double statorCurrentLimit = 40;
         public static final double maxPosition = 14;
         public static final double minPosition = -14;
-        public static final double PeakForwardDutyCycle = 0.3;
-        public static final double PeakReverseDutyCycle = -0.3;
+        public static final double PeakForwardDutyCycle = 0.2;
+        public static final double PeakReverseDutyCycle = -0.2;
 
     }
 

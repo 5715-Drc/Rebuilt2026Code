@@ -21,7 +21,7 @@ public class Feed extends SequentialCommandGroup {
         addCommands(new InstantCommand(() -> feeder.feederMove(1)));
         new WaitCommand(0.1);
         // addCommands(new InstantCommand(() -> indexer.indexerAtVelocity(-80)));
-        addCommands(new InstantCommand(() -> indexer.indexerMove(-1)));
+        addCommands(new InstantCommand(() -> indexer.indexerMove(-0.8)));
 
     }
 }
