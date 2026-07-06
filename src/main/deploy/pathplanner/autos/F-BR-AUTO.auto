@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RRA-PATH1"
+            "pathName": "BR1"
           }
         },
         {
@@ -43,10 +43,16 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "RRA-PATH3"
+                              "pathName": "BR2"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.1
                       }
                     },
                     {
@@ -120,7 +126,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 1.2
                       }
                     },
                     {
@@ -144,7 +150,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RRA-PATH4"
+                        "pathName": "BR3"
                       }
                     },
                     {
@@ -162,7 +168,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RRA-PATH6"
+                        "pathName": "BR4"
                       }
                     },
                     {

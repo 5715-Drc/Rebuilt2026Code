@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RedMidPath"
+            "pathName": "BMPATH"
           }
         },
         {
@@ -63,7 +63,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "RedMidPath1"
+                        "pathName": "BMPATH1"
                       }
                     },
                     {

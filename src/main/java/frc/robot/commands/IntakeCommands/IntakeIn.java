@@ -21,7 +21,7 @@ public class IntakeIn extends SequentialCommandGroup {
 
         addCommands(new InstantCommand(() -> intake.IntakePose(-9.45)));
         // addCommands(new InstantCommand(() -> intake.intakeAtVelocity(-50)));+
-        addCommands(new InstantCommand(() -> intake.intakeMove(-0.8)));
+        addCommands(new InstantCommand(() -> intake.intakeMove(-1.0)));
         // addCommands(new InstantCommand(() -> intake.intakeMove(-1)));
         addCommands(new InstantCommand(() -> RobotContainer.blink.setHeartBeatWhite()));
     }

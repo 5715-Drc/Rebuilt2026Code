@@ -251,18 +251,19 @@ SmartDashboard.putNumber("Turret/SpeedVY", 0);
     autoChooserAuto.setDefaultOption("No Auto", null);
     autoChooserAuto.addOption("RedRight-2Cycles+Outpost", new PathPlannerAuto("RR"));
     autoChooserAuto.addOption("BlueRight-2Cycles+Outpost", new PathPlannerAuto("BR"));
-    autoChooserAuto.addOption("P1-RRA-AUTO", new PathPlannerAuto("P1-RRA-AUTO"));
-    autoChooserAuto.addOption("F-RRA-AUTO", new PathPlannerAuto("F-RRA-AUTO"));
     autoChooserAuto.addOption("PitTest", new PathPlannerAuto("PitTest"));
     autoChooserAuto.addOption("M4", new PathPlannerAuto("M4"));
     autoChooserAuto.addOption("M2", new PathPlannerAuto("M2"));
-    autoChooserAuto.addOption("TestCommand", new PathPlannerAuto("Test2MWC"));
     autoChooserAuto.addOption("CMDTest", new PathPlannerAuto("CMDTest"));
     autoChooserAuto.addOption("F-RL-AUTO", new PathPlannerAuto("F-RL-AUTO"));
     autoChooserAuto.addOption("F-RM-Auto", new PathPlannerAuto("F-RM-Auto"));
-    
+    autoChooserAuto.addOption("F-Rr-AUTO", new PathPlannerAuto("F-RR-AUTO"));
+    autoChooserAuto.addOption("F-BR-AUTO", new PathPlannerAuto("F-BR-AUTO"));
+    autoChooserAuto.addOption("F-BL-AUTO", new PathPlannerAuto("F-BL-AUTO"));
+    autoChooserAuto.addOption("F-BM-AUTO", new PathPlannerAuto("F-BM-Auto"));
+    autoChooserAuto.addOption("Copy-RR", new PathPlannerAuto("Copy-of-F-RR-AUTO"));
     // Configure the button bindings
-      configureButtonBindings();
+    configureButtonBindings();
   }
 
   /**
@@ -297,7 +298,7 @@ SmartDashboard.putNumber("Turret/SpeedVY", 0);
   // hood.setDefaultCommand(
   //   new LockHoodAtHub(drive, hood, shooter)
   // );
-//shooter.setDefaultCommand(new ScoreFuel(drive, shooter, hood));
+shooter.setDefaultCommand(new ScoreFuelStated(drive, shooter, hood));
 hood.setDefaultCommand(new LockHoodAtHub(drive, hood, shooter));
 turretnew.setDefaultCommand(new turretTrack(drive, turretnew));
 

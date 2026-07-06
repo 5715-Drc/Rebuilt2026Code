@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 13.01848787446505,
-        "y": 4.015592011412268
+        "x": 3.5451349639638563,
+        "y": 4.035771120637174
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.35712537436333,
-        "y": 3.5698982889730817
+        "x": 3.057481927710843,
+        "y": 3.9912891566265065
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 14.700513552068474,
-        "y": 3.368659058487874
+        "x": 1.9100722891566262,
+        "y": 4.515819277108434
       },
       "prevControl": {
-        "x": 13.626056224422133,
-        "y": 3.7889574076062864
+        "x": 2.2269759036144574,
+        "y": 4.4393253012048195
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RM6"
+      "linkedName": "bm1"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 157.4658761530309
+    "rotation": -24.54541228638159
   },
   "reversed": false,
-  "folder": "RedMidAuto",
+  "folder": "BlueMidAuto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

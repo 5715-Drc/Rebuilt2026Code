@@ -61,7 +61,7 @@ public final class Constants {
   public static class ShooterConstants {
   
 public static final double ksystemlatancy = 0.04;
-public static final double kvelocityscalar = 2.4;
+public static final double kvelocityscalar = 1.3;
 
 
       public record ShooterPoint(
@@ -99,13 +99,15 @@ static List<ShooterPoint> shooterMap = List.of(
     new ShooterPoint(4.261843487205129, 2.7355859375, 64.34),
     new ShooterPoint(4.358955483199413, 2.83658203125, 65.06),
     new ShooterPoint(4.4728903930242865, 2.9469921875, 65.92),
-    new ShooterPoint(4.542949546871483, 3.0, 69.0),
-    new ShooterPoint(4.656386946038429, 3.05, 70.0),
-    new ShooterPoint(4.768567463869052, 3.05, 74.00),
-    new ShooterPoint(4.872628439591005, 3.05, 76.00),
-    new ShooterPoint(4.935631977933902, 3.1, 77.0),
-    new ShooterPoint(5.045867181015592, 3.1, 77.5),
-    new ShooterPoint(5.1347163686685615, 3.15, 78.00)
+    new ShooterPoint(4.542949546871483, 3.0, 68.0),
+    new ShooterPoint(4.656386946038429, 3.05, 69.0),
+    new ShooterPoint(4.768567463869052, 3.05, 71.00),
+    new ShooterPoint(4.872628439591005, 3.05, 72.00),
+    new ShooterPoint(4.935631977933902, 3.1, 73.5),
+    new ShooterPoint(5.045867181015592, 3.1, 75.5),
+    new ShooterPoint(5.1347163686685615, 3.15, 76.50)
+
+
 );
       public static ShooterPoint interpolate(double distance) {
         for (int i = 0; i < shooterMap.size() - 1; i++) {

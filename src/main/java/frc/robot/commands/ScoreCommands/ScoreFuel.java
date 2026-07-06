@@ -32,7 +32,7 @@ public class ScoreFuel extends Command {
   }
 
   @Override public void initialize() {
-    TunerConstants.setMaxSpeed(2);
+    TunerConstants.setMaxSpeed(1.5);
     // speed = SmartDashboard.getNumber("ShooterSpeed", -10);
     // new Pop();
   }
@@ -55,7 +55,7 @@ public class ScoreFuel extends Command {
  @Override public void execute() {
     double distance = shooter.getShooterDistance(drive, hood); // meters
     ShooterPoint target = Constants.ShooterConstants.interpolate(distance);
-    shooter.shootAtVelocity(-target.velocity()+2.5);
+    shooter.shootAtVelocity(-target.velocity()+5);
    // double desiredVelocity = 39.378 * (Math.pow(Math.E, 0.115 * distance));
     RobotContainer.blink.setHeartBeatBlue();
      // double Dvs = -desiredVelocity + 4.5
@@ -66,13 +66,14 @@ public class ScoreFuel extends Command {
     //   CommandScheduler.getInstance().schedule(new Feed());
     //}
 
-    if(shooter.getSpeed() < (-target.velocity() + 5)) {
+    if(shooter.getSpeed() < (-target.velocity() +8)) {
       CommandScheduler.getInstance().schedule(new Feed());
     }
 
  }
 
   @Override public void end(boolean interrupted) {
+    shooter.shootAtVelocity(-5);
   }
 
   @Override public boolean isFinished() { 

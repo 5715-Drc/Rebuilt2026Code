@@ -31,7 +31,7 @@ public class LockHoodAtHub extends Command {
     if(TurretNew.inAllianceZone(drive.getPose())) {
     double distance = shooter.getShooterDistance(drive, hood); // meters
      ShooterPoint target = Constants.ShooterConstants.interpolate(distance);
-     hood.goToPositionMotionMagic(target.hoodPos());
+     hood.goToPositionMotionMagic(target.hoodPos()-0.7);
     
     //double desiredTicks = 0.45071 + (0.334809*(Math.pow(Math.E, 0.427921 * distance)));
 

@@ -4,9 +4,11 @@
   "holonomicMode": true,
   "pathFolders": [
     "BlueLeftAuto",
+    "BlueRightAuto",
+    "BlueMidAuto",
     "RedLeftAuto",
     "RedMidAuto",
-    "RigthRedAuto"
+    "RedRightAuto"
   ],
   "autoFolders": [
     "CompAutos"

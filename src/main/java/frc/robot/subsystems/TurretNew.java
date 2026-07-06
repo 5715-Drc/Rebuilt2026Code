@@ -40,7 +40,7 @@ public class TurretNew extends SubsystemBase {
   // Turret constants
   public static final double kTurretGearRatio = (1.0/30.0); // motor : turret
   public static final Rotation2d kTurretZeroOffset = Rotation2d.fromDegrees(0); // adjust after calibration
-private static final double TURRET_ZERO_OFFSET_ROTATIONS = 0.63;
+private static final double TURRET_ZERO_OFFSET_ROTATIONS = 0.0;
   private static Transform2d RobotToTurret = new Transform2d(0.148339, 0.127487, Rotation2d.fromDegrees(0));
 
   double OneRotInTicks = 29.76904296875;

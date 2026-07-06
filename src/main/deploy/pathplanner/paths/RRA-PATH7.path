@@ -59,7 +59,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "RigthRedAuto",
+  "folder": "RedRightAuto",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -0.33617268294703817

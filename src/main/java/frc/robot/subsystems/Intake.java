@@ -3,10 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,14 +17,15 @@ import frc.robot.util.LoggedTunableNumber;
 
 public class Intake extends SubsystemBase {
     private static Intake IntakeInstance = null;
+
     private TalonFX m_move;
+    private TalonFX m_moveFollower;
     private TalonFX m_extender;
     private DutyCycleOut dutyCycleOut;
     private TalonFXConfiguration config;
     private MotionMagicConfigs magicConfigs;
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
     private TalonFXConfiguration MoveConfig;
-
     final MotionMagicVelocityVoltage m_requestVelocityVoltage = new MotionMagicVelocityVoltage(0);
     private MotionMagicConfigs motionMagicConfigurationMove;
 
@@ -30,6 +33,7 @@ public class Intake extends SubsystemBase {
     //constructor
     private Intake(){
         m_move = new TalonFX(31);
+        m_moveFollower = new TalonFX(39);
         m_extender = new TalonFX(32);
         dutyCycleOut = new DutyCycleOut(0);
         config = new TalonFXConfiguration();
@@ -37,7 +41,7 @@ public class Intake extends SubsystemBase {
 
 
 
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         MoveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -49,11 +53,15 @@ public class Intake extends SubsystemBase {
         
         //configuration
         m_move.getConfigurator().apply(MoveConfig);
+        m_moveFollower.getConfigurator().apply(MoveConfig);
         m_extender.getConfigurator().apply(config);
         m_extender.setPosition(0);
         m_move.clearStickyFaults();
+        m_moveFollower.clearStickyFaults();
         m_extender.clearStickyFaults();
     }
+
+
 
     /**
      * Apply tunable configuration to motors
@@ -78,7 +86,7 @@ public class Intake extends SubsystemBase {
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Tunable.Intake.maxPosition;
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         // Motion Magic
@@ -110,8 +118,12 @@ public class Intake extends SubsystemBase {
         // Apply configuration to motor
         // m_move.getConfigurator().apply(MoveConfig);
         // Apply configuration to motor
-        m_extender.getConfigurator().apply(config);
-    }
+
+        // Apply configuration to motors
+        m_move.getConfigurator().apply(MoveConfig);
+        m_moveFollower.getConfigurator().apply(MoveConfig);
+        m_extender.getConfigurator().apply(config);    }
+    
 
     public static Intake getIntakeInstance(){
        if (IntakeInstance == null) IntakeInstance = new Intake();
@@ -121,21 +133,22 @@ public class Intake extends SubsystemBase {
     public void ResetIntakePose(){
         m_extender.setPosition(0);
     }
+    
     public void IntakePose(double Goal) {
         m_extender.setControl(m_request.withPosition(Goal));
     }
 
     public void intakeMove(double speed) {
         m_move.setControl(dutyCycleOut.withOutput(speed));
+        m_moveFollower.setControl(new Follower(31, MotorAlignmentValue.Opposed));
     }
+
     public void intakeRotation(double angle) {
         m_extender.setControl(dutyCycleOut.withOutput(angle));
     }
-
+    
     public void intakeAtVelocity(double velocityRps) {
-      m_move.setControl(
-          m_requestVelocityVoltage.withVelocity(velocityRps)
-      );
+      m_move.setControl(m_requestVelocityVoltage.withVelocity(velocityRps));
     }
     public double getIntakePose() {
         return m_extender.getPosition().getValueAsDouble();
@@ -146,5 +159,7 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake/Position", m_extender.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Intake/IntakeSpeed", m_move.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Intake/IntakeTemp",m_move.getDeviceTemp().getValueAsDouble());
+
+    
     }
 }

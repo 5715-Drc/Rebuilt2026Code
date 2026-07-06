@@ -135,7 +135,7 @@ public class Drive extends SubsystemBase {
         new PPHolonomicDriveController(
             new PIDConstants(5, 0.3, 0.5), new PIDConstants(5, 0, 0)), //Translation 4.35 0 0 Rotation 5 0 0 
         PP_CONFIG,
-        () -> true,//DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue,
+        () -> false,//DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK()); 
     PathPlannerLogging.setLogActivePathCallback(
